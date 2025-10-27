@@ -270,9 +270,159 @@
         .lang-toggle:hover {
             background: rgba(255,255,255,0.3);
         }
+
+        /* Bessere Focus-Styles für Keyboard-Navigation */
+        input:focus, 
+        select:focus, 
+        textarea:focus,
+        button:focus {
+            outline: 3px solid #667eea !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2) !important;
+        }
+
+        /* Keyboard Shortcut Hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(102, 126, 234, 0.95);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .keyboard-hint.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .keyboard-hint {
+                display: none;
+            }
+        }
     </style>
     <script>
         let einsatzCounter = 1;
+
+        // Keyboard Navigation Setup
+        document.addEventListener('DOMContentLoaded', function() {
+            setupKeyboardNavigation();
+            
+            // Focus auf erstes Feld
+            setTimeout(() => {
+                const firstInput = document.getElementById('vorname');
+                if (firstInput) firstInput.focus();
+            }, 100);
+        });
+
+        function setupKeyboardNavigation() {
+            const form = document.querySelector('form');
+            
+            // Enter-Taste Navigation (außer bei Textarea und Submit)
+            form.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    const target = e.target;
+                    
+                    // Bei Textarea Shift+Enter für neue Zeile, Enter für nächstes Feld
+                    if (target.tagName === 'TEXTAREA') {
+                        if (!e.shiftKey) {
+                            e.preventDefault();
+                            focusNextField(target);
+                        }
+                        return;
+                    }
+                    
+                    // Submit-Button normal funktionieren lassen
+                    if (target.type === 'submit') {
+                        return;
+                    }
+                    
+                    // Bei allen anderen Feldern: Enter = nächstes Feld
+                    if (target.tagName === 'INPUT' || target.tagName === 'SELECT') {
+                        e.preventDefault();
+                        
+                        // Bei Datum-Feldern: Trigger change event für Day-Generation
+                        if (target.type === 'date') {
+                            target.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                        
+                        focusNextField(target);
+                    }
+                }
+            });
+
+            // Keyboard Shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl/Cmd + E = Neuer Einsatz
+                if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                    e.preventDefault();
+                    addEinsatz();
+                    showKeyboardHint('Neuer Einsatz hinzugefügt!');
+                }
+                
+                // Ctrl/Cmd + Enter = Submit (von überall)
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    form.submit();
+                }
+            });
+
+            // Auto-save Werte bei Input (optional für später)
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                // Besseres Focus-Feedback
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.01)';
+                });
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+        }
+
+        function focusNextField(currentField) {
+            const form = currentField.closest('form');
+            const focusableElements = Array.from(form.querySelectorAll(
+                'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button[type="submit"]'
+            ));
+            
+            const currentIndex = focusableElements.indexOf(currentField);
+            const nextField = focusableElements[currentIndex + 1];
+            
+            if (nextField) {
+                nextField.focus();
+                
+                // Bei Select: automatisch öffnen
+                if (nextField.tagName === 'SELECT') {
+                    nextField.click();
+                }
+                
+                // Bei Number: Selektieren für schnelles Überschreiben
+                if (nextField.type === 'number' || nextField.type === 'text' || nextField.type === 'email') {
+                    nextField.select();
+                }
+            }
+        }
+
+        function showKeyboardHint(message) {
+            let hint = document.querySelector('.keyboard-hint');
+            if (!hint) {
+                hint = document.createElement('div');
+                hint.className = 'keyboard-hint';
+                document.body.appendChild(hint);
+            }
+            hint.textContent = message;
+            hint.classList.add('show');
+            setTimeout(() => {
+                hint.classList.remove('show');
+            }, 2000);
+        }
 
         function formatDate(date) {
             const days = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
@@ -340,8 +490,9 @@
                     placeholder="0.00"
                     style="width: 80px; padding: 8px; border: none; font-size: 15px; font-weight: 600; color: #667eea; text-align: right; outline: none;"
                     onchange="calculateTotal(${einsatzId})"
-                    onfocus="this.parentElement.style.borderColor='#667eea'; this.parentElement.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                    onfocus="this.select(); this.parentElement.style.borderColor='#667eea'; this.parentElement.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
                     onblur="this.parentElement.style.borderColor='#e0e0e0'; this.parentElement.style.boxShadow='none'"
+                    onkeydown="if(event.key==='Enter'){event.preventDefault(); var next=this.closest('tr').nextElementSibling; if(next){next.querySelector('input').focus()}else{document.querySelector('[name=\\'Einsatz_${einsatzId}_Familie_Kundenname\\']').focus()}}"
                 >`;
                 html += `<span style="color: #667eea; font-weight: 600; font-size: 15px;">h</span>`;
                 html += `</div>`;
@@ -398,6 +549,13 @@
             const container = document.getElementById('einsaetze-container');
             const newBlock = document.createElement('div');
             newBlock.className = 'einsatz-block';
+            
+            // Check if copy-to-all is enabled
+            const copyToAll = document.getElementById('copy-to-all').checked;
+            const masterFamilie = copyToAll ? document.getElementById('master-familie').value : '';
+            const masterOrt = copyToAll ? document.getElementById('master-ort').value : '';
+            const masterStundenansatz = copyToAll ? document.getElementById('master-stundenansatz').value : '';
+            
             newBlock.innerHTML = `
                 <button type="button" class="remove-einsatz" onclick="removeEinsatz(this)" title="Einsatz entfernen / Remove entry">×</button>
                 <h3>📅 Einsatz ${einsatzCounter} / Entry ${einsatzCounter}</h3>
@@ -422,21 +580,24 @@
                     <div class="form-group">
                         <label>Stundenansatz / Hourly Rate</label>
                         <div style="position: relative;">
-                            <input type="number" name="Einsatz_${einsatzCounter}_Stundenansatz_CHF" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px;">
+                            <input type="number" name="Einsatz_${einsatzCounter}_Stundenansatz_CHF" value="${masterStundenansatz}" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px; ${copyToAll && masterStundenansatz ? 'background: #e8f5e9; border-color: #4caf50;' : ''}">
                             <span style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #667eea; font-weight: 600; font-size: 14px; pointer-events: none;">CHF</span>
                         </div>
+                        ${copyToAll && masterStundenansatz ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen / Automatically copied</small>' : ''}
                     </div>
                     <div></div>
                 </div>
 
                 <div class="form-group">
                     <label>Familie / Kundenname / Family / Client Name <span class="required">*</span></label>
-                    <input type="text" name="Einsatz_${einsatzCounter}_Familie_Kundenname" required>
+                    <input type="text" name="Einsatz_${einsatzCounter}_Familie_Kundenname" value="${masterFamilie}" required ${copyToAll ? 'style="background: #e8f5e9; border-color: #4caf50;"' : ''}>
+                    ${copyToAll ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen / Automatically copied</small>' : ''}
                 </div>
 
                 <div class="form-group">
                     <label>Ort des Einsatzes / Location <span class="required">*</span></label>
-                    <input type="text" name="Einsatz_${einsatzCounter}_Ort_Einsatz" required>
+                    <input type="text" name="Einsatz_${einsatzCounter}_Ort_Einsatz" value="${masterOrt}" required ${copyToAll ? 'style="background: #e8f5e9; border-color: #4caf50;"' : ''}>
+                    ${copyToAll ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen / Automatically copied</small>' : ''}
                 </div>
 
                 <div class="form-group">
@@ -484,7 +645,7 @@
 
         <form action="https://api.web3forms.com/submit" method="POST" class="form-section">
             <!-- Web3Forms Configuration -->
-            <input type="hidden" name="access_key" value="a15dd4e1-52d1-4a05-9914-bf9d3bccd885">
+            <input type="hidden" name="access_key" value="DEIN-WEB3FORMS-ACCESS-KEY">
             <input type="hidden" name="email" value="company@babsy.ch">
             <input type="hidden" name="subject" value="" id="dynamic-subject">
             <input type="hidden" name="from_name" value="Babsy Stundenrapport System">
@@ -607,7 +768,7 @@
                         <div class="form-group">
                             <label>Stundenansatz / Hourly Rate</label>
                             <div style="position: relative;">
-                                <input type="number" name="Einsatz_1_Stundenansatz_CHF" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px;">
+                                <input type="number" name="Einsatz_1_Stundenansatz_CHF" id="master-stundenansatz" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px;">
                                 <span style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #667eea; font-weight: 600; font-size: 14px; pointer-events: none;">CHF</span>
                             </div>
                         </div>
@@ -616,12 +777,22 @@
 
                     <div class="form-group">
                         <label>Familie / Kundenname / Family / Client Name <span class="required">*</span></label>
-                        <input type="text" name="Einsatz_1_Familie_Kundenname" required>
+                        <input type="text" name="Einsatz_1_Familie_Kundenname" id="master-familie" required>
                     </div>
 
                     <div class="form-group">
                         <label>Ort des Einsatzes / Location <span class="required">*</span></label>
-                        <input type="text" name="Einsatz_1_Ort_Einsatz" required>
+                        <input type="text" name="Einsatz_1_Ort_Einsatz" id="master-ort" required>
+                    </div>
+
+                    <div class="form-group" style="background: #e8eaf6; padding: 15px; border-radius: 8px; border: 2px dashed #667eea;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 0;">
+                            <input type="checkbox" id="copy-to-all" style="width: 20px; height: 20px; cursor: pointer;">
+                            <span style="font-weight: 600; color: #667eea;">
+                                🔄 Familie, Ort und Stundenansatz für alle weiteren Einsätze verwenden / 
+                                Use family, location and hourly rate for all other entries
+                            </span>
+                        </label>
                     </div>
 
                     <div class="form-group">
@@ -658,6 +829,21 @@
             </div>
 
             <button type="submit" class="submit-btn">✉️ Stundenrapport absenden / Submit Hours Report</button>
+
+            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+                <p style="font-size: 13px; color: #555; margin-bottom: 8px;"><strong>⌨️ Keyboard-Shortcuts:</strong></p>
+                <p style="font-size: 12px; color: #666; margin: 4px 0;">
+                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">Enter</kbd> = Nächstes Feld
+                </p>
+                <p style="font-size: 12px; color: #666; margin: 4px 0;">
+                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">Ctrl</kbd> + 
+                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">E</kbd> = Neuer Einsatz hinzufügen
+                </p>
+                <p style="font-size: 12px; color: #666; margin: 4px 0;">
+                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">Ctrl</kbd> + 
+                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">Enter</kbd> = Formular absenden
+                </p>
+            </div>
         </form>
 
         <div class="contact-info">
