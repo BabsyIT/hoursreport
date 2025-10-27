@@ -161,21 +161,30 @@
 
         /* Neue Styles für Einsatz-Blöcke */
         .einsatz-block {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 25px;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
             position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .einsatz-block:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
         }
 
         .einsatz-block h3 {
             color: #667eea;
-            margin-bottom: 20px;
-            font-size: 18px;
+            margin-bottom: 25px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .remove-einsatz {
@@ -203,22 +212,28 @@
 
         .add-einsatz-btn {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
             background: white;
             color: #667eea;
             border: 2px dashed #667eea;
-            border-radius: 8px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .add-einsatz-btn:hover {
             background: #f8f9fa;
             border-color: #764ba2;
             color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
         }
 
         @media (max-width: 768px) {
@@ -287,47 +302,69 @@
                 return;
             }
 
-            let html = '<div style="background: white; padding: 20px; border-radius: 8px; margin-top: 15px;">';
-            html += '<h4 style="color: #667eea; margin-bottom: 15px;">Stunden pro Tag / Hours per Day</h4>';
+            let html = '<div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">';
+            html += '<h4 style="color: #667eea; margin-bottom: 20px; font-size: 16px; display: flex; align-items: center; gap: 8px;"><span>⏰</span> Stunden pro Tag / Hours per Day</h4>';
+            
+            html += '<div style="overflow-x: auto;">';
+            html += '<table style="width: 100%; border-collapse: separate; border-spacing: 0; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden;">';
+            
+            // Table Header
+            html += '<thead>';
+            html += '<tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">';
+            html += '<th style="padding: 15px; text-align: left; color: white; font-weight: 600; border-bottom: 2px solid #5568d3;">Datum / Date</th>';
+            html += '<th style="padding: 15px; text-align: center; color: white; font-weight: 600; border-bottom: 2px solid #5568d3; min-width: 150px;">Stunden / Hours</th>';
+            html += '</tr>';
+            html += '</thead>';
+            
+            html += '<tbody>';
             
             const currentDate = new Date(startDate);
-            let dayCount = 0;
+            let rowIndex = 0;
             
             while (currentDate <= endDate) {
-                dayCount++;
+                rowIndex++;
                 const dateStr = currentDate.toISOString().split('T')[0];
                 const displayDate = formatDate(currentDate);
+                const bgColor = rowIndex % 2 === 0 ? '#f8f9fa' : 'white';
                 
-                html += `
-                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; align-items: center; margin-bottom: 12px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
-                        <label style="margin: 0; font-weight: 500; color: #555;">
-                            📅 ${displayDate}
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <input 
-                                type="number" 
-                                name="Einsatz_${einsatzId}_Tag_${dateStr}" 
-                                min="0" 
-                                max="24" 
-                                step="0.25" 
-                                placeholder="0.0"
-                                style="padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 5px; font-size: 14px; width: 100%;"
-                                onchange="calculateTotal(${einsatzId})"
-                            >
-                            <span style="color: #666; font-size: 14px;">h</span>
-                        </div>
-                    </div>
-                `;
+                html += `<tr style="background: ${bgColor}; transition: background 0.2s ease;" onmouseover="this.style.background='#e8eaf6'" onmouseout="this.style.background='${bgColor}'">`;
+                html += `<td style="padding: 15px; border-bottom: 1px solid #e0e0e0; font-weight: 500; color: #555;">📅 ${displayDate}</td>`;
+                html += `<td style="padding: 15px; border-bottom: 1px solid #e0e0e0; text-align: center;">`;
+                html += `<div style="display: inline-flex; align-items: center; gap: 8px; background: white; padding: 8px 15px; border-radius: 6px; border: 2px solid #e0e0e0;">`;
+                html += `<input 
+                    type="number" 
+                    name="Einsatz_${einsatzId}_Tag_${dateStr}" 
+                    min="0" 
+                    max="24" 
+                    step="0.25" 
+                    placeholder="0.00"
+                    style="width: 80px; padding: 8px; border: none; font-size: 15px; font-weight: 600; color: #667eea; text-align: right; outline: none;"
+                    onchange="calculateTotal(${einsatzId})"
+                    onfocus="this.parentElement.style.borderColor='#667eea'; this.parentElement.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                    onblur="this.parentElement.style.borderColor='#e0e0e0'; this.parentElement.style.boxShadow='none'"
+                >`;
+                html += `<span style="color: #667eea; font-weight: 600; font-size: 15px;">h</span>`;
+                html += `</div>`;
+                html += `</td>`;
+                html += `</tr>`;
                 
                 currentDate.setDate(currentDate.getDate() + 1);
             }
             
-            html += `
-                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="font-size: 16px;">Gesamtstunden / Total Hours:</strong>
-                    <strong id="total-${einsatzId}" style="font-size: 20px;">0.0 h</strong>
-                </div>
-            `;
+            html += '</tbody>';
+            
+            // Table Footer mit Total
+            html += '<tfoot>';
+            html += '<tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">';
+            html += '<td style="padding: 18px; color: white; font-weight: 700; font-size: 16px; border-top: 3px solid #5568d3;">💼 Gesamtstunden / Total Hours</td>';
+            html += `<td style="padding: 18px; text-align: center; border-top: 3px solid #5568d3;">`;
+            html += `<span id="total-${einsatzId}" style="color: white; font-weight: 700; font-size: 20px;">0.00 h</span>`;
+            html += `</td>`;
+            html += '</tr>';
+            html += '</tfoot>';
+            
+            html += '</table>';
+            html += '</div>';
             html += '</div>';
             
             container.innerHTML = html;
@@ -383,8 +420,11 @@
 
                 <div class="row" style="margin-top: 20px;">
                     <div class="form-group">
-                        <label>Stundenansatz CHF / Hourly Rate CHF</label>
-                        <input type="number" name="Einsatz_${einsatzCounter}_Stundenansatz_CHF" min="0" step="0.5" placeholder="z.B. 25.00">
+                        <label>Stundenansatz / Hourly Rate</label>
+                        <div style="position: relative;">
+                            <input type="number" name="Einsatz_${einsatzCounter}_Stundenansatz_CHF" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px;">
+                            <span style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #667eea; font-weight: 600; font-size: 14px; pointer-events: none;">CHF</span>
+                        </div>
                     </div>
                     <div></div>
                 </div>
@@ -434,17 +474,19 @@
 
         <div class="info-box">
             <p><strong>📅 Wichtig / Important:</strong></p>
-            <p><strong>DE:</strong> Bitte alle Angaben zwischen dem 24. und 28. jeden Monats mitteilen, damit die interne Buchhaltung, Statistik und Auszahlungen bis Ende des Monats erfolgen können.</p>
-            <p><strong>EN:</strong> Please provide all information between the 24th and 28th of each month so that internal bookkeeping, statistics and payments can be made by the end of the month.</p>
-            <p style="margin-top: 15px;"><strong>💰 Lohn nicht erhalten? / Wages not received?</strong><br>
-            Kontakt bis 5. des Folgemonats: <a href="mailto:sitter@babsy.ch">sitter@babsy.ch</a> oder WhatsApp: +41 78 861 60 25 (Andrea)</p>
+            <p><strong>🇩🇪 Deutsch:</strong> Bitte alle Angaben zwischen dem <strong>24. und 28. jeden Monats</strong> mitteilen, damit die interne Buchhaltung, Statistik und Auszahlungen bis Ende des Monats erfolgen können.</p>
+            <p><strong>🇬🇧 English:</strong> Please provide all information between the <strong>24th and 28th of each month</strong> so that internal bookkeeping, statistics and payments can be made by the end of the month.</p>
+            <p style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e0e0e0;"><strong>💰 Lohn nicht erhalten? / Wages not received?</strong><br>
+            Kontakt bis 5. des Folgemonats:<br>
+            📧 <a href="mailto:sitter@babsy.ch">sitter@babsy.ch</a><br>
+            📱 WhatsApp: <a href="https://wa.me/41788616025">+41 78 861 60 25</a> (Andrea)</p>
         </div>
 
         <form action="https://api.web3forms.com/submit" method="POST" class="form-section">
             <!-- Web3Forms Configuration -->
             <input type="hidden" name="access_key" value="DEIN-WEB3FORMS-ACCESS-KEY">
             <input type="hidden" name="email" value="company@babsy.ch">
-            <input type="hidden" name="subject" value="Neuer Babsy-Sitter Stundenrapport">
+            <input type="hidden" name="subject" value="" id="dynamic-subject">
             <input type="hidden" name="from_name" value="Babsy Stundenrapport System">
             <input type="hidden" name="redirect" value="https://babsyit.github.io/hoursreport/danke">
             
@@ -464,10 +506,25 @@
                             replytoInput.value = this.value;
                         });
                     }
+                    
+                    // Dynamischen Betreff beim Submit erstellen
+                    const form = document.querySelector('form');
+                    form.addEventListener('submit', function(e) {
+                        const vorname = document.getElementById('vorname').value;
+                        const nachname = document.getElementById('nachname').value;
+                        const monat = document.getElementById('monat').value;
+                        const jahr = document.getElementById('jahr').value;
+                        const subjectField = document.getElementById('dynamic-subject');
+                        
+                        // Betreff zusammensetzen: "Vorname Nachname Monat Jahr"
+                        subjectField.value = `${vorname} ${nachname} ${monat} ${jahr}`;
+                    });
                 });
             </script>
 
-            <h2 style="margin-bottom: 25px; color: #667eea;">Persönliche Angaben / Personal Information</h2>
+            <h2 style="margin-bottom: 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">👤</span> Persönliche Angaben / Personal Information
+            </h2>
 
             <div class="row">
                 <div class="form-group">
@@ -491,7 +548,9 @@
                 <input type="tel" id="telefon" name="Telefon" placeholder="+41 ...">
             </div>
 
-            <h2 style="margin: 40px 0 25px; color: #667eea;">Berichtszeitraum / Reporting Period</h2>
+            <h2 style="margin: 40px 0 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">📆</span> Berichtszeitraum / Reporting Period
+            </h2>
 
             <div class="row">
                 <div class="form-group">
@@ -519,7 +578,9 @@
                 </div>
             </div>
 
-            <h2 style="margin: 40px 0 25px; color: #667eea;">Einsätze / Assignments</h2>
+            <h2 style="margin: 40px 0 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">🗂️</span> Einsätze / Assignments
+            </h2>
 
             <div id="einsaetze-container">
                 <!-- Erster Einsatz Block -->
@@ -544,8 +605,11 @@
 
                     <div class="row" style="margin-top: 20px;">
                         <div class="form-group">
-                            <label>Stundenansatz CHF / Hourly Rate CHF</label>
-                            <input type="number" name="Einsatz_1_Stundenansatz_CHF" min="0" step="0.5" placeholder="z.B. 25.00">
+                            <label>Stundenansatz / Hourly Rate</label>
+                            <div style="position: relative;">
+                                <input type="number" name="Einsatz_1_Stundenansatz_CHF" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px;">
+                                <span style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #667eea; font-weight: 600; font-size: 14px; pointer-events: none;">CHF</span>
+                            </div>
                         </div>
                         <div></div>
                     </div>
@@ -579,22 +643,29 @@
                 </div>
             </div>
 
-            <button type="button" class="add-einsatz-btn" onclick="addEinsatz()">➕ Weiteren Einsatz hinzufügen / Add Another Entry</button>
+            <button type="button" class="add-einsatz-btn" onclick="addEinsatz()">
+                <span style="font-size: 20px;">➕</span>
+                Weiteren Einsatz hinzufügen / Add Another Entry
+            </button>
 
-            <h2 style="margin: 40px 0 25px; color: #667eea;">Allgemeine Bemerkungen / General Notes</h2>
+            <h2 style="margin: 40px 0 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">📝</span> Allgemeine Bemerkungen / General Notes
+            </h2>
 
             <div class="form-group">
                 <label for="allgemeine-bemerkungen">Zusätzliche Anmerkungen / Additional Comments</label>
                 <textarea id="allgemeine-bemerkungen" name="Allgemeine_Bemerkungen" placeholder="Weitere Informationen zum gesamten Report / Additional information for the entire report..."></textarea>
             </div>
 
-            <button type="submit" class="submit-btn">📧 Stundenrapport senden / Submit Hours Report</button>
+            <button type="submit" class="submit-btn">✉️ Stundenrapport absenden / Submit Hours Report</button>
         </form>
 
         <div class="contact-info">
-            <p>Bei Fragen kontaktieren Sie uns / For questions contact us:<br>
-            <a href="mailto:sitter@babsy.ch">sitter@babsy.ch</a> | WhatsApp: +41 78 861 60 25</p>
-            <p style="margin-top: 10px; font-size: 12px;">© 2025 Babsy - Danke für eure tolle Arbeit! 💜</p>
+            <p><strong>📞 Bei Fragen kontaktieren Sie uns / For questions contact us:</strong></p>
+            <p style="margin-top: 10px;">
+            📧 <a href="mailto:sitter@babsy.ch">sitter@babsy.ch</a><br>
+            📱 WhatsApp: <a href="https://wa.me/41788616025">+41 78 861 60 25</a></p>
+            <p style="margin-top: 15px; font-size: 12px;">© 2025 Babsy - Danke für eure tolle Arbeit! 💜</p>
         </div>
     </div>
 </body>
