@@ -440,14 +440,32 @@
             Kontakt bis 5. des Folgemonats: <a href="mailto:sitter@babsy.ch">sitter@babsy.ch</a> oder WhatsApp: +41 78 861 60 25 (Andrea)</p>
         </div>
 
-        <form action="https://formsubmit.io/send/company@babsy.ch" method="POST" class="form-section">
-            <!-- FormSubmit Configuration -->
-            <input type="hidden" name="_subject" value="Neuer Babsy-Sitter Stundenrapport">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
+        <form action="https://api.web3forms.com/submit" method="POST" class="form-section">
+            <!-- Web3Forms Configuration -->
+            <input type="hidden" name="access_key" value="DEIN-WEB3FORMS-ACCESS-KEY">
+            <input type="hidden" name="email" value="company@babsy.ch">
+            <input type="hidden" name="subject" value="Neuer Babsy-Sitter Stundenrapport">
+            <input type="hidden" name="from_name" value="Babsy Stundenrapport System">
+            <input type="hidden" name="redirect" value="https://babsy.ch/danke.html">
             
-            <!-- Optional: Redirect nach Absenden -->
-            <!-- <input type="hidden" name="_next" value="https://babsy.ch/danke"> -->
+            <!-- Optional: Spam-Schutz -->
+            <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+            
+            <!-- Optional: CC an Absender -->
+            <input type="hidden" name="replyto" value="">
+            
+            <script>
+                // Automatisch replyto auf die eingegebene Email setzen
+                document.addEventListener('DOMContentLoaded', function() {
+                    const emailInput = document.getElementById('sitter-email');
+                    const replytoInput = document.querySelector('input[name="replyto"]');
+                    if (emailInput && replytoInput) {
+                        emailInput.addEventListener('input', function() {
+                            replytoInput.value = this.value;
+                        });
+                    }
+                });
+            </script>
 
             <h2 style="margin-bottom: 25px; color: #667eea;">Persönliche Angaben / Personal Information</h2>
 
@@ -464,8 +482,8 @@
             </div>
 
             <div class="form-group">
-                <label for="email">E-Mail-Adresse / Email Address <span class="required">*</span></label>
-                <input type="email" id="email" name="Email" required>
+                <label for="sitter-email">E-Mail-Adresse / Email Address <span class="required">*</span></label>
+                <input type="email" id="sitter-email" name="Sitter_Email" required>
             </div>
 
             <div class="form-group">
