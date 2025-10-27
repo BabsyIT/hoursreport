@@ -259,6 +259,103 @@
     <script>
         let einsatzCounter = 1;
 
+        function formatDate(date) {
+            const days = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+            const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+            const dayName = days[date.getDay()];
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${dayName}, ${day}. ${month} ${year}`;
+        }
+
+        function generateDayInputs(einsatzId) {
+            const vonInput = document.querySelector(`input[name="Einsatz_${einsatzId}_Datum_von"]`);
+            const bisInput = document.querySelector(`input[name="Einsatz_${einsatzId}_Datum_bis"]`);
+            const container = document.getElementById(`days-container-${einsatzId}`);
+            
+            if (!vonInput.value || !bisInput.value) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const startDate = new Date(vonInput.value + 'T00:00:00');
+            const endDate = new Date(bisInput.value + 'T00:00:00');
+            
+            if (startDate > endDate) {
+                container.innerHTML = '<p style="color: #e74c3c; padding: 10px;">⚠️ Startdatum muss vor Enddatum liegen / Start date must be before end date</p>';
+                return;
+            }
+
+            let html = '<div style="background: white; padding: 20px; border-radius: 8px; margin-top: 15px;">';
+            html += '<h4 style="color: #667eea; margin-bottom: 15px;">Stunden pro Tag / Hours per Day</h4>';
+            
+            const currentDate = new Date(startDate);
+            let dayCount = 0;
+            
+            while (currentDate <= endDate) {
+                dayCount++;
+                const dateStr = currentDate.toISOString().split('T')[0];
+                const displayDate = formatDate(currentDate);
+                
+                html += `
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; align-items: center; margin-bottom: 12px; padding: 10px; background: #f8f9fa; border-radius: 5px;">
+                        <label style="margin: 0; font-weight: 500; color: #555;">
+                            📅 ${displayDate}
+                        </label>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input 
+                                type="number" 
+                                name="Einsatz_${einsatzId}_Tag_${dateStr}" 
+                                min="0" 
+                                max="24" 
+                                step="0.25" 
+                                placeholder="0.0"
+                                style="padding: 8px 12px; border: 2px solid #e0e0e0; border-radius: 5px; font-size: 14px; width: 100%;"
+                                onchange="calculateTotal(${einsatzId})"
+                            >
+                            <span style="color: #666; font-size: 14px;">h</span>
+                        </div>
+                    </div>
+                `;
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            html += `
+                <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 16px;">Gesamtstunden / Total Hours:</strong>
+                    <strong id="total-${einsatzId}" style="font-size: 20px;">0.0 h</strong>
+                </div>
+            `;
+            html += '</div>';
+            
+            container.innerHTML = html;
+            calculateTotal(einsatzId);
+        }
+
+        function calculateTotal(einsatzId) {
+            const container = document.getElementById(`days-container-${einsatzId}`);
+            const inputs = container.querySelectorAll('input[type="number"]');
+            let total = 0;
+            
+            inputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                total += value;
+            });
+            
+            const totalElement = document.getElementById(`total-${einsatzId}`);
+            if (totalElement) {
+                totalElement.textContent = total.toFixed(2) + ' h';
+            }
+            
+            // Update hidden field for total hours
+            const hiddenTotal = document.querySelector(`input[name="Einsatz_${einsatzId}_Gesamtstunden"]`);
+            if (hiddenTotal) {
+                hiddenTotal.value = total.toFixed(2);
+            }
+        }
+
         function addEinsatz() {
             einsatzCounter++;
             const container = document.getElementById('einsaetze-container');
@@ -271,25 +368,25 @@
                 <div class="row">
                     <div class="form-group">
                         <label>Datum von / Date from <span class="required">*</span></label>
-                        <input type="date" name="Einsatz_${einsatzCounter}_Datum_von" required>
+                        <input type="date" name="Einsatz_${einsatzCounter}_Datum_von" required onchange="generateDayInputs(${einsatzCounter})">
                     </div>
 
                     <div class="form-group">
                         <label>Datum bis / Date to <span class="required">*</span></label>
-                        <input type="date" name="Einsatz_${einsatzCounter}_Datum_bis" required>
+                        <input type="date" name="Einsatz_${einsatzCounter}_Datum_bis" required onchange="generateDayInputs(${einsatzCounter})">
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group">
-                        <label>Anzahl Stunden / Number of Hours <span class="required">*</span></label>
-                        <input type="number" name="Einsatz_${einsatzCounter}_Anzahl_Stunden" min="0" step="0.5" placeholder="z.B. 8.5" required>
-                    </div>
+                <div id="days-container-${einsatzCounter}"></div>
 
+                <input type="hidden" name="Einsatz_${einsatzCounter}_Gesamtstunden" value="0">
+
+                <div class="row" style="margin-top: 20px;">
                     <div class="form-group">
                         <label>Stundenansatz CHF / Hourly Rate CHF</label>
                         <input type="number" name="Einsatz_${einsatzCounter}_Stundenansatz_CHF" min="0" step="0.5" placeholder="z.B. 25.00">
                     </div>
+                    <div></div>
                 </div>
 
                 <div class="form-group">
@@ -414,25 +511,25 @@
                     <div class="row">
                         <div class="form-group">
                             <label>Datum von / Date from <span class="required">*</span></label>
-                            <input type="date" name="Einsatz_1_Datum_von" required>
+                            <input type="date" name="Einsatz_1_Datum_von" required onchange="generateDayInputs(1)">
                         </div>
 
                         <div class="form-group">
                             <label>Datum bis / Date to <span class="required">*</span></label>
-                            <input type="date" name="Einsatz_1_Datum_bis" required>
+                            <input type="date" name="Einsatz_1_Datum_bis" required onchange="generateDayInputs(1)">
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group">
-                            <label>Anzahl Stunden / Number of Hours <span class="required">*</span></label>
-                            <input type="number" name="Einsatz_1_Anzahl_Stunden" min="0" step="0.5" placeholder="z.B. 8.5" required>
-                        </div>
+                    <div id="days-container-1"></div>
 
+                    <input type="hidden" name="Einsatz_1_Gesamtstunden" value="0">
+
+                    <div class="row" style="margin-top: 20px;">
                         <div class="form-group">
                             <label>Stundenansatz CHF / Hourly Rate CHF</label>
                             <input type="number" name="Einsatz_1_Stundenansatz_CHF" min="0" step="0.5" placeholder="z.B. 25.00">
                         </div>
+                        <div></div>
                     </div>
 
                     <div class="form-group">
