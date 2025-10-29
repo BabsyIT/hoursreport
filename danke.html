@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vielen Dank! - Babsy</title>
+    <title>Babsy-Sitter Stundenrapport | Hours Report</title>
     <style>
         * {
             margin: 0;
@@ -15,63 +15,46 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 20px;
+            color: #333;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 900px;
+            margin: 0 auto;
             background: white;
             border-radius: 15px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            padding: 50px 40px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
             text-align: center;
         }
 
-        .success-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            animation: bounceIn 0.6s ease-out;
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
         }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0); opacity: 0; }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        h1 {
-            color: #667eea;
-            font-size: 32px;
-            margin-bottom: 15px;
-        }
-
-        h2 {
-            color: #764ba2;
-            font-size: 24px;
-            margin-bottom: 25px;
-            font-weight: 500;
-        }
-
-        p {
-            color: #555;
+        .header p {
             font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 15px;
+            opacity: 0.95;
         }
 
         .info-box {
             background: #f8f9fa;
             border-left: 4px solid #667eea;
             padding: 20px;
-            margin: 30px 0;
+            margin: 30px;
             border-radius: 5px;
-            text-align: left;
         }
 
         .info-box p {
+            line-height: 1.6;
             margin-bottom: 10px;
             font-size: 14px;
         }
@@ -80,28 +63,95 @@
             color: #667eea;
         }
 
-        .home-btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 15px 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
+        .form-section {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .home-btn:hover {
+        .form-group.focused {
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .required {
+            color: #e74c3c;
+            margin-left: 3px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="number"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+            background: #f8f9ff;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
         .contact-info {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 1px solid #e0e0e0;
+            background: #f8f9fa;
+            padding: 20px 30px;
+            text-align: center;
             font-size: 14px;
             color: #666;
         }
@@ -116,50 +166,968 @@
             text-decoration: underline;
         }
 
+        .einsatz-block {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .einsatz-block:hover {
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.15);
+            border-color: #667eea;
+        }
+
+        .einsatz-block h3 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .remove-einsatz {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .remove-einsatz:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .add-einsatz-btn {
+            width: 100%;
+            padding: 15px;
+            background: white;
+            color: #667eea;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .add-einsatz-btn:hover {
+            background: #f8f9fa;
+            border-color: #764ba2;
+            color: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+        }
+
         @media (max-width: 768px) {
-            .container {
-                padding: 40px 30px;
+            .row {
+                grid-template-columns: 1fr;
             }
 
-            h1 {
-                font-size: 28px;
+            .header h1 {
+                font-size: 24px;
             }
 
-            h2 {
-                font-size: 20px;
+            .form-section,
+            .info-box {
+                padding: 20px;
+                margin: 20px;
             }
 
-            .success-icon {
-                font-size: 60px;
+            .einsatz-block {
+                padding: 20px;
             }
         }
+
+        /* VERBESSERTE Focus-Styles für Keyboard-Navigation */
+        input:focus, 
+        select:focus, 
+        textarea:focus {
+            outline: 3px solid #667eea !important;
+            outline-offset: 2px !important;
+            box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.25) !important;
+            border-color: #667eea !important;
+        }
+
+        button:focus {
+            outline: 3px solid #764ba2 !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 0 5px rgba(118, 75, 162, 0.25) !important;
+        }
+
+        /* Keyboard Shortcut Hint - VERBESSERT */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .keyboard-hint.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Keyboard Shortcuts Info Panel */
+        .shortcuts-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            z-index: 999;
+            max-width: 300px;
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .shortcuts-panel.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .shortcuts-panel h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .shortcuts-panel .shortcut {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+        .shortcuts-panel kbd {
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .shortcuts-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 998;
+        }
+
+        .shortcuts-toggle:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .keyboard-hint,
+            .shortcuts-panel,
+            .shortcuts-toggle {
+                display: none;
+            }
+        }
+
+        /* Schnellwahl-Buttons für Stunden */
+        .quick-hours {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-hour-btn {
+            padding: 5px 12px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-hour-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Entferne Pfeile bei Number-Inputs (Desktop) */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
     </style>
+    <script>
+        let einsatzCounter = 1;
+
+        // Keyboard Navigation Setup
+        document.addEventListener('DOMContentLoaded', function() {
+            setupKeyboardNavigation();
+            setupShortcutsPanel();
+            
+            // Focus auf erstes Feld mit Auto-Select
+            setTimeout(() => {
+                const firstInput = document.getElementById('vorname');
+                if (firstInput) {
+                    firstInput.focus();
+                    firstInput.select();
+                    showKeyboardHint('💡 Tipp: Nutze Enter zum nächsten Feld, Ctrl+E für neuen Einsatz');
+                }
+            }, 500);
+        });
+
+        function setupShortcutsPanel() {
+            // Shortcuts Toggle Button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'shortcuts-toggle';
+            toggleBtn.innerHTML = '⌨️ Tastatur-Hilfe';
+            toggleBtn.onclick = function() {
+                const panel = document.querySelector('.shortcuts-panel');
+                panel.classList.toggle('show');
+            };
+            document.body.appendChild(toggleBtn);
+
+            // Shortcuts Panel
+            const panel = document.createElement('div');
+            panel.className = 'shortcuts-panel';
+            panel.innerHTML = `
+                <h3>⌨️ Tastatur-Shortcuts</h3>
+                <div class="shortcut">
+                    <span>Nächstes Feld</span>
+                    <kbd>Enter</kbd>
+                </div>
+                <div class="shortcut">
+                    <span>Nur Pflichtfelder</span>
+                    <kbd>Shift</kbd> + <kbd>Enter</kbd>
+                </div>
+                <div class="shortcut">
+                    <span>Neuer Einsatz</span>
+                    <kbd>Ctrl</kbd> + <kbd>E</kbd>
+                </div>
+                <div class="shortcut">
+                    <span>Absenden</span>
+                    <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                </div>
+                <div class="shortcut">
+                    <span>Hilfe schließen</span>
+                    <kbd>Esc</kbd>
+                </div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #666;">
+                    <strong>Stunden-Tabelle:</strong><br>
+                    Enter = Nächster Tag<br>
+                    Zahlen 1-8 = Schnelleingabe
+                </div>
+            `;
+            document.body.appendChild(panel);
+
+            // ESC zum Schließen
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    panel.classList.remove('show');
+                }
+            });
+        }
+
+        function setupKeyboardNavigation() {
+            const form = document.querySelector('form');
+            
+            // Enter-Taste Navigation
+            form.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    const target = e.target;
+                    
+                    // Bei Textarea: Enter = neue Zeile
+                    if (target.tagName === 'TEXTAREA') {
+                        return; // Normal verhalten
+                    }
+                    
+                    // Submit-Button normal funktionieren lassen
+                    if (target.type === 'submit') {
+                        return;
+                    }
+                    
+                    // Bei allen anderen Feldern: Enter = nächstes Feld
+                    if (target.tagName === 'INPUT' || target.tagName === 'SELECT') {
+                        e.preventDefault();
+                        
+                        // Bei Datum-Feldern: Trigger change event
+                        if (target.type === 'date') {
+                            target.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                        
+                        focusNextField(target, false);
+                    }
+                }
+
+                // Shift+Enter = Nur Pflichtfelder
+                if (e.key === 'Enter' && e.shiftKey) {
+                    const target = e.target;
+                    if (target.tagName !== 'TEXTAREA') {
+                        e.preventDefault();
+                        focusNextField(target, true);
+                        showKeyboardHint('⚡ Springe zu Pflichtfeldern');
+                    }
+                }
+            });
+
+            // Global Keyboard Shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Wenn in Input, nur Ctrl/Cmd Shortcuts
+                const inInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName);
+                
+                if (inInput && !e.ctrlKey && !e.metaKey) {
+                    return;
+                }
+
+                // Ctrl/Cmd + E = Neuer Einsatz
+                if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                    e.preventDefault();
+                    addEinsatz();
+                    showKeyboardHint('✅ Neuer Einsatz hinzugefügt!');
+                }
+                
+                // Ctrl/Cmd + S = Submit
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    if (confirm('Stundenrapport jetzt absenden?')) {
+                        form.requestSubmit();
+                        showKeyboardHint('📤 Wird abgesendet...');
+                    }
+                }
+
+                // Ctrl/Cmd + Enter = Submit
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    if (confirm('Stundenrapport jetzt absenden?')) {
+                        form.requestSubmit();
+                    }
+                }
+            });
+
+            // Focus-Feedback für alle Inputs
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    const formGroup = this.closest('.form-group');
+                    if (formGroup) {
+                        formGroup.classList.add('focused');
+                    }
+                    
+                    // Auto-select
+                    if (['text', 'number', 'email', 'tel'].includes(this.type)) {
+                        setTimeout(() => this.select(), 10);
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    const formGroup = this.closest('.form-group');
+                    if (formGroup) {
+                        formGroup.classList.remove('focused');
+                    }
+                });
+            });
+        }
+
+        function focusNextField(currentField, skipOptional = false) {
+            const form = currentField.closest('form');
+            const focusableElements = Array.from(form.querySelectorAll(
+                'input:not([type="hidden"]):not([disabled]):not([type="checkbox"]), select:not([disabled]), textarea:not([disabled]), button[type="submit"]'
+            ));
+            
+            let currentIndex = focusableElements.indexOf(currentField);
+            let nextField = null;
+            
+            // Finde nächstes Feld
+            for (let i = currentIndex + 1; i < focusableElements.length; i++) {
+                const field = focusableElements[i];
+                
+                // Skip optionale Felder wenn gewünscht
+                if (skipOptional && !field.hasAttribute('required') && field.type !== 'submit') {
+                    continue;
+                }
+                
+                nextField = field;
+                break;
+            }
+            
+            if (nextField) {
+                nextField.focus();
+                
+                // Bei Select kurz warten, dann öffnen
+                if (nextField.tagName === 'SELECT') {
+                    setTimeout(() => nextField.click(), 100);
+                }
+                
+                // Auto-select
+                if (['number', 'text', 'email', 'tel'].includes(nextField.type)) {
+                    setTimeout(() => nextField.select(), 10);
+                }
+
+                // Smooth scroll
+                nextField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function showKeyboardHint(message) {
+            let hint = document.querySelector('.keyboard-hint');
+            if (!hint) {
+                hint = document.createElement('div');
+                hint.className = 'keyboard-hint';
+                document.body.appendChild(hint);
+            }
+            hint.textContent = message;
+            hint.classList.add('show');
+            setTimeout(() => {
+                hint.classList.remove('show');
+            }, 3000);
+        }
+
+        function formatDate(date) {
+            const days = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+            const months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+            const dayName = days[date.getDay()];
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            return `${dayName}, ${day}. ${month} ${year}`;
+        }
+
+        function generateDayInputs(einsatzId) {
+            const vonInput = document.querySelector(`input[name*="Einsatz_${einsatzId}__Datum_von"]`);
+            const bisInput = document.querySelector(`input[name*="Einsatz_${einsatzId}__Datum_bis"]`);
+            const container = document.getElementById(`days-container-${einsatzId}`);
+            
+            if (!vonInput.value || !bisInput.value) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const startDate = new Date(vonInput.value + 'T00:00:00');
+            const endDate = new Date(bisInput.value + 'T00:00:00');
+            
+            if (startDate > endDate) {
+                container.innerHTML = '<p style="color: #e74c3c; padding: 10px;">⚠️ Startdatum muss vor Enddatum liegen / Start date must be before end date</p>';
+                return;
+            }
+
+            let html = '<div style="background: white; padding: 25px; border-radius: 10px; margin-top: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">';
+            html += '<h4 style="color: #667eea; margin-bottom: 20px; font-size: 16px; display: flex; align-items: center; gap: 8px;"><span>⏰</span> Stunden pro Tag / Hours per Day</h4>';
+            
+            html += '<div style="overflow-x: auto;">';
+            html += '<table style="width: 100%; border-collapse: separate; border-spacing: 0; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden;">';
+            
+            html += '<thead>';
+            html += '<tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">';
+            html += '<th style="padding: 15px; text-align: left; color: white; font-weight: 600; border-bottom: 2px solid #5568d3;">Datum / Date</th>';
+            html += '<th style="padding: 15px; text-align: center; color: white; font-weight: 600; border-bottom: 2px solid #5568d3; min-width: 200px;">Stunden / Hours</th>';
+            html += '</tr>';
+            html += '</thead>';
+            
+            html += '<tbody>';
+            
+            const currentDate = new Date(startDate);
+            let rowIndex = 0;
+            let firstInputId = null;
+            
+            while (currentDate <= endDate) {
+                rowIndex++;
+                const dateStr = currentDate.toISOString().split('T')[0];
+                const displayDate = formatDate(currentDate);
+                const bgColor = rowIndex % 2 === 0 ? '#f8f9fa' : 'white';
+                const inputId = `input-${einsatzId}-${dateStr}`;
+                
+                if (!firstInputId) firstInputId = inputId;
+                
+                html += `<tr style="background: ${bgColor}; transition: background 0.2s ease;" onmouseover="this.style.background='#e8eaf6'" onmouseout="this.style.background='${bgColor}'">`;
+                html += `<td style="padding: 15px; border-bottom: 1px solid #e0e0e0; font-weight: 500; color: #555;">📅 ${displayDate}</td>`;
+                html += `<td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">`;
+                
+                // Input Container
+                html += `<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">`;
+                html += `<div style="display: inline-flex; align-items: center; gap: 8px; background: white; padding: 8px 15px; border-radius: 6px; border: 2px solid #e0e0e0;">`;
+                html += `<input 
+                    type="number" 
+                    id="${inputId}"
+                    name="Einsatz_${einsatzId}__Tag_${dateStr} / Day_${dateStr}" 
+                    min="0" 
+                    max="24" 
+                    step="0.25" 
+                    placeholder="0.00"
+                    style="width: 80px; padding: 8px; border: none; font-size: 15px; font-weight: 600; color: #667eea; text-align: right; outline: none;"
+                    onchange="calculateTotal(${einsatzId})"
+                    onfocus="this.select(); this.parentElement.style.borderColor='#667eea'; this.parentElement.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
+                    onblur="this.parentElement.style.borderColor='#e0e0e0'; this.parentElement.style.boxShadow='none'"
+                    onkeydown="handleHoursInputKeydown(event, ${einsatzId}, '${dateStr}')"
+                >`;
+                html += `<span style="color: #667eea; font-weight: 600; font-size: 15px;">h</span>`;
+                html += `</div>`;
+                
+                // Schnellwahl-Buttons
+                html += `<div class="quick-hours">`;
+                [1, 2, 3, 4, 5, 8].forEach(hour => {
+                    html += `<button type="button" class="quick-hour-btn" onclick="setHours(${einsatzId}, '${dateStr}', ${hour})" title="Setze ${hour} Stunden">${hour}h</button>`;
+                });
+                html += `</div>`;
+                html += `</div>`;
+                
+                html += `</td>`;
+                html += `</tr>`;
+                
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            html += '</tbody>';
+            
+            html += '<tfoot>';
+            html += '<tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">';
+            html += '<td style="padding: 18px; color: white; font-weight: 700; font-size: 16px; border-top: 3px solid #5568d3;">💼 Gesamtstunden / Total Hours</td>';
+            html += `<td style="padding: 18px; text-align: center; border-top: 3px solid #5568d3;">`;
+            html += `<span id="total-${einsatzId}" style="color: white; font-weight: 700; font-size: 20px;">0.00 h</span>`;
+            html += `</td>`;
+            html += '</tr>';
+            html += '</tfoot>';
+            
+            html += '</table>';
+            html += '</div>';
+            html += '</div>';
+            
+            container.innerHTML = html;
+            calculateTotal(einsatzId);
+            
+            // Focus auf erstes Stunden-Feld setzen
+            if (firstInputId) {
+                setTimeout(() => {
+                    const firstInput = document.getElementById(firstInputId);
+                    if (firstInput) {
+                        firstInput.focus();
+                        firstInput.select();
+                        showKeyboardHint('⏰ Tipp: Enter = Nächster Tag, Zahlen 1-8 = Schnelleingabe');
+                    }
+                }, 100);
+            }
+        }
+
+        function handleHoursInputKeydown(event, einsatzId, currentDateStr) {
+            const input = event.target;
+            
+            // Enter = Nächster Tag
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const currentRow = input.closest('tr');
+                const nextRow = currentRow.nextElementSibling;
+                
+                if (nextRow) {
+                    const nextInput = nextRow.querySelector('input[type="number"]');
+                    if (nextInput) {
+                        nextInput.focus();
+                        nextInput.select();
+                    }
+                } else {
+                    // Letzter Tag - springe zum nächsten Feld im Formular
+                    const familieInput = document.querySelector(`[name*="Einsatz_${einsatzId}__Familie_Kundenname"]`);
+                    if (familieInput) {
+                        familieInput.focus();
+                        familieInput.select();
+                    }
+                }
+                return;
+            }
+            
+            // Schnelleingabe: Zahlen 1-8
+            if (!event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey) {
+                if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(event.key)) {
+                    const currentValue = input.value;
+                    // Nur wenn Feld leer oder ausgewählt
+                    if (!currentValue || input.selectionStart === 0 && input.selectionEnd === input.value.length) {
+                        event.preventDefault();
+                        setHours(einsatzId, currentDateStr, parseInt(event.key));
+                        showKeyboardHint(`⚡ ${event.key} Stunden eingetragen`);
+                    }
+                }
+            }
+        }
+
+        function setHours(einsatzId, dateStr, hours) {
+            const input = document.querySelector(`input[name*="Einsatz_${einsatzId}__Tag_${dateStr}"]`);
+            if (input) {
+                input.value = hours;
+                calculateTotal(einsatzId);
+                input.dispatchEvent(new Event('change'));
+            }
+        }
+
+        function calculateTotal(einsatzId) {
+            const container = document.getElementById(`days-container-${einsatzId}`);
+            const inputs = container.querySelectorAll('input[type="number"]');
+            let total = 0;
+            
+            inputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                total += value;
+            });
+            
+            const totalElement = document.getElementById(`total-${einsatzId}`);
+            if (totalElement) {
+                totalElement.textContent = total.toFixed(2) + ' h';
+            }
+            
+            const hiddenTotal = document.querySelector(`input[name*="Einsatz_${einsatzId}__Gesamtstunden"]`);
+            if (hiddenTotal) {
+                hiddenTotal.value = total.toFixed(2);
+            }
+        }
+
+        function addEinsatz() {
+            einsatzCounter++;
+            const container = document.getElementById('einsaetze-container');
+            const newBlock = document.createElement('div');
+            newBlock.className = 'einsatz-block';
+            
+            const copyToAll = document.getElementById('copy-to-all').checked;
+            const masterFamilie = copyToAll ? document.getElementById('master-familie').value : '';
+            const masterOrt = copyToAll ? document.getElementById('master-ort').value : '';
+            const masterStundenansatz = copyToAll ? document.getElementById('master-stundenansatz').value : '';
+            
+            newBlock.innerHTML = `
+                <button type="button" class="remove-einsatz" onclick="removeEinsatz(this)" title="Einsatz entfernen">×</button>
+                <h3>📅 Einsatz ${einsatzCounter} / Entry ${einsatzCounter}</h3>
+                
+                <div class="row">
+                    <div class="form-group">
+                        <label>Datum von / Date from <span class="required">*</span></label>
+                        <input type="date" name="Einsatz_${einsatzCounter}__Datum_von / Date_from" id="new-einsatz-datum-von-${einsatzCounter}" required onchange="generateDayInputs(${einsatzCounter})">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Datum bis / Date to <span class="required">*</span></label>
+                        <input type="date" name="Einsatz_${einsatzCounter}__Datum_bis / Date_to" required onchange="generateDayInputs(${einsatzCounter})">
+                    </div>
+                </div>
+
+                <div id="days-container-${einsatzCounter}"></div>
+
+                <input type="hidden" name="Einsatz_${einsatzCounter}__Gesamtstunden / Total_Hours" value="0">
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Stundenansatz / Hourly Rate</label>
+                        <div style="position: relative;">
+                            <input type="number" name="Einsatz_${einsatzCounter}__Stundenansatz_CHF / Hourly_Rate_CHF" value="${masterStundenansatz}" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px; ${copyToAll && masterStundenansatz ? 'background: #e8f5e9; border-color: #4caf50;' : ''}">
+                            <span style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #667eea; font-weight: 600; font-size: 14px; pointer-events: none;">CHF</span>
+                        </div>
+                        ${copyToAll && masterStundenansatz ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen</small>' : ''}
+                    </div>
+                    <div></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Familie / Kundenname / Family / Client Name <span class="required">*</span></label>
+                    <input type="text" name="Einsatz_${einsatzCounter}__Familie_Kundenname / Family_Client_Name" value="${masterFamilie}" required ${copyToAll ? 'style="background: #e8f5e9; border-color: #4caf50;"' : ''}>
+                    ${copyToAll ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen</small>' : ''}
+                </div>
+
+                <div class="form-group">
+                    <label>Ort des Einsatzes / Location <span class="required">*</span></label>
+                    <input type="text" name="Einsatz_${einsatzCounter}__Ort_Einsatz / Location" value="${masterOrt}" required ${copyToAll ? 'style="background: #e8f5e9; border-color: #4caf50;"' : ''}>
+                    ${copyToAll ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen</small>' : ''}
+                </div>
+
+                <div class="form-group">
+                    <label>Tätigkeit / Activity</label>
+                    <select name="Einsatz_${einsatzCounter}__Taetigkeit / Activity">
+                        <option value="">Bitte wählen / Please select</option>
+                        <option value="Babysitting">Babysitting</option>
+                        <option value="Kinderbetreuung / Childcare">Kinderbetreuung / Childcare</option>
+                        <option value="Hausaufgabenhilfe / Homework help">Hausaufgabenhilfe / Homework help</option>
+                        <option value="Ferienbetreuung / Holiday care">Ferienbetreuung / Holiday care</option>
+                        <option value="Sonstiges / Other">Sonstiges / Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Bemerkungen / Notes</label>
+                    <textarea name="Einsatz_${einsatzCounter}__Bemerkungen / Notes" placeholder="Zusätzliche Informationen..."></textarea>
+                </div>
+            `;
+            container.appendChild(newBlock);
+            
+            // Fokus auf erstes Datum-Feld des neuen Einsatzes
+            setTimeout(() => {
+                const newDateInput = document.getElementById(`new-einsatz-datum-von-${einsatzCounter}`);
+                if (newDateInput) {
+                    newDateInput.focus();
+                    newDateInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
+        }
+
+        function removeEinsatz(button) {
+            if (confirm('Diesen Einsatz wirklich entfernen?')) {
+                const block = button.closest('.einsatz-block');
+                block.remove();
+                showKeyboardHint('🗑️ Einsatz entfernt');
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
-        <div class="success-icon">✅</div>
-        
-        <h1>Vielen Dank!</h1>
-        <h2>Thank You!</h2>
-        
-        <p><strong>Dein Stundenrapport wurde erfolgreich übermittelt.</strong></p>
-        <p><strong>Your hours report has been successfully submitted.</strong></p>
-        
-        <div class="info-box">
-            <p><strong>📧 Was passiert jetzt? / What happens now?</strong></p>
-            <p><strong>DE:</strong> Wir haben deinen Stundenrapport erhalten und werden ihn so schnell wie möglich bearbeiten. Deine Auszahlung erfolgt wie gewohnt bis Ende des Monats.</p>
-            <p><strong>EN:</strong> We have received your hours report and will process it as soon as possible. Your payment will be made as usual by the end of the month.</p>
+        <div class="header">
+            <h1>🍼 Babsy-Sitter Stundenrapport</h1>
+            <p>Hours Report</p>
         </div>
-        
-        <p style="margin-top: 25px;">Falls du Fragen hast, kannst du uns jederzeit kontaktieren.</p>
-        <p>If you have any questions, feel free to contact us anytime.</p>
-        
-        <a href="https://babsy.ch" class="home-btn">🏠 Zurück zur Startseite / Back to Home</a>
-        
+
+        <div class="info-box">
+            <p><strong>📅 Wichtig / Important:</strong></p>
+            <p><strong>🇩🇪 Deutsch:</strong> Bitte alle Angaben zwischen dem <strong>24. und 28. jeden Monats</strong> mitteilen, damit die interne Buchhaltung, Statistik und Auszahlungen bis Ende des Monats erfolgen können.</p>
+            <p><strong>🇬🇧 English:</strong> Please provide all information between the <strong>24th and 28th of each month</strong> so that internal bookkeeping, statistics and payments can be made by the end of the month.</p>
+            <p style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e0e0e0;"><strong>💰 Lohn nicht erhalten? / Wages not received?</strong><br>
+            Kontakt bis 5. des Folgemonats:<br>
+            📧 <a href="mailto:sitter@babsy.ch">sitter@babsy.ch</a><br>
+            📱 WhatsApp: <a href="https://wa.me/41788616025">+41 78 861 60 25</a> (Andrea)</p>
+        </div>
+
+        <form action="https://api.web3forms.com/submit" method="POST" class="form-section">
+            <input type="hidden" name="access_key" value="DEIN-WEB3FORMS-ACCESS-KEY">
+            <input type="hidden" name="email" value="company@babsy.ch">
+            <input type="hidden" name="subject" value="" id="dynamic-subject">
+            <input type="hidden" name="from_name" value="Babsy Stundenrapport System">
+            <input type="hidden" name="redirect" value="https://babsyit.github.io/hoursreport/danke">
+            <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+            <input type="hidden" name="replyto" value="">
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const emailInput = document.getElementById('sitter-email');
+                    const replytoInput = document.querySelector('input[name="replyto"]');
+                    if (emailInput && replytoInput) {
+                        emailInput.addEventListener('input', function() {
+                            replytoInput.value = this.value;
+                        });
+                    }
+                    
+                    const form = document.querySelector('form');
+                    form.addEventListener('submit', function(e) {
+                        const vorname = document.getElementById('vorname').value;
+                        const nachname = document.getElementById('nachname').value;
+                        const monat = document.getElementById('monat').value;
+                        const jahr = document.getElementById('jahr').value;
+                        const subjectField = document.getElementById('dynamic-subject');
+                        subjectField.value = `${vorname} ${nachname} ${monat} ${jahr}`;
+                    });
+                });
+            </script>
+
+            <h2 style="margin-bottom: 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">👤</span> Persönliche Angaben / Personal Information
+            </h2>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="vorname">Vorname / First Name <span class="required">*</span></label>
+                    <input type="text" id="vorname" name="Vorname / First Name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nachname">Nachname / Last Name <span class="required">*</span></label>
+                    <input type="text" id="nachname" name="Nachname / Last Name" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sitter-email">E-Mail-Adresse / Email Address <span class="required">*</span></label>
+                <input type="email" id="sitter-email" name="E-Mail-Adresse / Email Address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefon">Telefon / Phone</label>
+                <input type="tel" id="telefon" name="Telefon / Phone" placeholder="+41 ...">
+            </div>
+
+            <h2 style="margin: 40px 0 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">📆</span> Berichtszeitraum / Reporting Period
+            </h2>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="monat">Monat / Month <span class="required">*</span></label>
+                    <select id="monat" name="Monat / Month" required>
+                        <option value="">Bitte wählen / Please select</option>
+                        <option value="Januar/January">Januar / January</option>
+                        <option value="Februar/February">Februar / February</option>
+                        <option value="März/March">März / March</option>
+                        <option value="April/April">April / April</option>
+                        <option value="Mai/May">Mai / May</option>
+                        <option value="Juni/June">Juni / June</option>
+                        <option value="Juli/July">Juli / July</option>
+                        <option value="August/August">August / August</option>
+                        <option value="September/September">September / September</option>
+                        <option value="Oktober/October">Oktober / October</option>
+                        <option value="November/November">November / November</option>
+                        <option value="Dezember/December">Dezember / December</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="jahr">Jahr / Year <span class="required">*</span></label>
+                    <input type="number" id="jahr" name="Jahr / Year" min="2020" max="2030" value="2025" required>
+                </div>
+            </div>
+
+            <h2 style="margin: 40px 0 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">🗂️</span> Einsätze / Assignments
+            </h2>
+
+            <div id="einsaetze-container">
+                <div class="einsatz-block">
+                    <h3>📅 Einsatz 1 / Entry 1</h3>
+                    
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Datum von / Date from <span class="required">*</span></label>
+                            <input type="date" name="Einsatz_1__Datum_von / Date_from" required onchange="generateDayInputs(1)">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Datum bis / Date to <span class="required">*</span></label>
+                            <input type="date" name="Einsatz_1__Datum_bis / Date_to" required onchange="generateDayInputs(1)">
+                        </div>
+                    </div>
+
+                    <div id="days-container-1"></div>
+
+                    <input type="hidden" name="Einsatz_1__Gesamtstunden / Total_Hours" value="0">
+
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="form-group">
+                            <label>Stundenansatz / Hourly Rate</label>
+                            <div style="position: relative;">
+                                <input type="number" name="Einsatz_1__Stundenansatz_CHF / Hourly_Rate_CHF" id="master-stundenansatz" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px;">
+                                <span style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #667eea; font-weight: 600; font-size: 14px; pointer-events: none;">CHF</span>
+                            </div>
+                        </div>
+                        <div></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Familie / Kundenname / Family / Client Name <span class="required">*</span></label>
+                        <input type="text" name="Einsatz_1__Familie_Kundenname / Family_Client_Name" id="master-familie" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Ort des Einsatzes / Location <span class="required">*</span></label>
+                        <input type="text" name="Einsatz_1__Ort_Einsatz / Location" id="master-ort" required>
+                    </div>
+
+                    <div class="form-group" style="background: #e8eaf6; padding: 15px; border-radius: 8px; border: 2px dashed #667eea;">
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 0;">
+                            <input type="checkbox" id="copy-to-all" style="width: 20px; height: 20px; cursor: pointer;">
+                            <span style="font-weight: 600; color: #667eea;">
+                                🔄 Familie, Ort und Stundenansatz für alle weiteren Einsätze verwenden
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tätigkeit / Activity</label>
+                        <select name="Einsatz_1__Taetigkeit / Activity">
+                            <option value="">Bitte wählen / Please select</option>
+                            <option value="Babysitting">Babysitting</option>
+                            <option value="Kinderbetreuung / Childcare">Kinderbetreuung / Childcare</option>
+                            <option value="Hausaufgabenhilfe / Homework help">Hausaufgabenhilfe / Homework help</option>
+                            <option value="Ferienbetreuung / Holiday care">Ferienbetreuung / Holiday care</option>
+                            <option value="Sonstiges / Other">Sonstiges / Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Bemerkungen / Notes</label>
+                        <textarea name="Einsatz_1__Bemerkungen / Notes" placeholder="Zusätzliche Informationen..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="add-einsatz-btn" onclick="addEinsatz()">
+                <span style="font-size: 20px;">➕</span>
+                Weiteren Einsatz hinzufügen / Add Another Entry
+            </button>
+
+            <h2 style="margin: 40px 0 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">📝</span> Allgemeine Bemerkungen / General Notes
+            </h2>
+
+            <div class="form-group">
+                <label for="allgemeine-bemerkungen">Zusätzliche Anmerkungen / Additional Comments</label>
+                <textarea id="allgemeine-bemerkungen" name="Allgemeine_Bemerkungen / General_Notes" placeholder="Weitere Informationen..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">✉️ Stundenrapport absenden / Submit Hours Report</button>
+        </form>
+
         <div class="contact-info">
-            <p><strong>Kontakt / Contact:</strong><br>
-            <a href="mailto:company@babsy.ch">company@babsy.ch</a><br>
-            WhatsApp: <a href="https://wa.me/41788616025">+41 78 861 60 25</a> (Andrea)</p>
+            <p><strong>📞 Bei Fragen kontaktieren Sie uns:</strong></p>
+            <p style="margin-top: 10px;">
+            📧 <a href="mailto:sitter@babsy.ch">sitter@babsy.ch</a><br>
+            📱 WhatsApp: <a href="https://wa.me/41788616025">+41 78 861 60 25</a></p>
             <p style="margin-top: 15px; font-size: 12px;">© 2025 Babsy - Danke für eure tolle Arbeit! 💜</p>
         </div>
     </div>
