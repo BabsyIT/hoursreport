@@ -69,6 +69,12 @@
 
         .form-group {
             margin-bottom: 25px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group.focused {
+            transform: scale(1.01);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
         }
 
         label {
@@ -105,7 +111,8 @@
         select:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+            background: #f8f9ff;
         }
 
         textarea {
@@ -159,7 +166,6 @@
             text-decoration: underline;
         }
 
-        /* Neue Styles für Einsatz-Blöcke */
         .einsatz-block {
             background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
             border: 2px solid #e0e0e0;
@@ -256,55 +262,158 @@
             }
         }
 
-        .lang-toggle {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 20px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .lang-toggle:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        /* Bessere Focus-Styles für Keyboard-Navigation */
+        /* VERBESSERTE Focus-Styles für Keyboard-Navigation */
         input:focus, 
         select:focus, 
-        textarea:focus,
-        button:focus {
+        textarea:focus {
             outline: 3px solid #667eea !important;
             outline-offset: 2px !important;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2) !important;
+            box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.25) !important;
+            border-color: #667eea !important;
         }
 
-        /* Keyboard Shortcut Hint */
+        button:focus {
+            outline: 3px solid #764ba2 !important;
+            outline-offset: 3px !important;
+            box-shadow: 0 0 0 5px rgba(118, 75, 162, 0.25) !important;
+        }
+
+        /* Keyboard Shortcut Hint - VERBESSERT */
         .keyboard-hint {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(102, 126, 234, 0.95);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-size: 13px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            padding: 15px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 6px 25px rgba(0,0,0,0.3);
             z-index: 1000;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
         }
 
         .keyboard-hint.show {
             opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Keyboard Shortcuts Info Panel */
+        .shortcuts-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            z-index: 999;
+            max-width: 300px;
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .shortcuts-panel.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .shortcuts-panel h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        .shortcuts-panel .shortcut {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 13px;
+        }
+
+        .shortcuts-panel kbd {
+            background: #f8f9fa;
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .shortcuts-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 998;
+        }
+
+        .shortcuts-toggle:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         @media (max-width: 768px) {
-            .keyboard-hint {
+            .keyboard-hint,
+            .shortcuts-panel,
+            .shortcuts-toggle {
                 display: none;
             }
+        }
+
+        /* Schnellwahl-Buttons für Stunden */
+        .quick-hours {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-hour-btn {
+            padding: 5px 12px;
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-hour-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Entferne Pfeile bei Number-Inputs (Desktop) */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
         }
     </style>
     <script>
@@ -313,29 +422,82 @@
         // Keyboard Navigation Setup
         document.addEventListener('DOMContentLoaded', function() {
             setupKeyboardNavigation();
+            setupShortcutsPanel();
             
-            // Focus auf erstes Feld
+            // Focus auf erstes Feld mit Auto-Select
             setTimeout(() => {
                 const firstInput = document.getElementById('vorname');
-                if (firstInput) firstInput.focus();
-            }, 100);
+                if (firstInput) {
+                    firstInput.focus();
+                    firstInput.select();
+                    showKeyboardHint('💡 Tipp: Nutze Enter zum nächsten Feld, Ctrl+E für neuen Einsatz');
+                }
+            }, 500);
         });
+
+        function setupShortcutsPanel() {
+            // Shortcuts Toggle Button
+            const toggleBtn = document.createElement('button');
+            toggleBtn.className = 'shortcuts-toggle';
+            toggleBtn.innerHTML = '⌨️ Tastatur-Hilfe';
+            toggleBtn.onclick = function() {
+                const panel = document.querySelector('.shortcuts-panel');
+                panel.classList.toggle('show');
+            };
+            document.body.appendChild(toggleBtn);
+
+            // Shortcuts Panel
+            const panel = document.createElement('div');
+            panel.className = 'shortcuts-panel';
+            panel.innerHTML = `
+                <h3>⌨️ Tastatur-Shortcuts</h3>
+                <div class="shortcut">
+                    <span>Nächstes Feld</span>
+                    <kbd>Enter</kbd>
+                </div>
+                <div class="shortcut">
+                    <span>Nur Pflichtfelder</span>
+                    <kbd>Shift</kbd> + <kbd>Enter</kbd>
+                </div>
+                <div class="shortcut">
+                    <span>Neuer Einsatz</span>
+                    <kbd>Ctrl</kbd> + <kbd>E</kbd>
+                </div>
+                <div class="shortcut">
+                    <span>Absenden</span>
+                    <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                </div>
+                <div class="shortcut">
+                    <span>Hilfe schließen</span>
+                    <kbd>Esc</kbd>
+                </div>
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0; font-size: 12px; color: #666;">
+                    <strong>Stunden-Tabelle:</strong><br>
+                    Enter = Nächster Tag<br>
+                    Zahlen 1-8 = Schnelleingabe
+                </div>
+            `;
+            document.body.appendChild(panel);
+
+            // ESC zum Schließen
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    panel.classList.remove('show');
+                }
+            });
+        }
 
         function setupKeyboardNavigation() {
             const form = document.querySelector('form');
             
-            // Enter-Taste Navigation (außer bei Textarea und Submit)
+            // Enter-Taste Navigation
             form.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     const target = e.target;
                     
-                    // Bei Textarea Shift+Enter für neue Zeile, Enter für nächstes Feld
+                    // Bei Textarea: Enter = neue Zeile
                     if (target.tagName === 'TEXTAREA') {
-                        if (!e.shiftKey) {
-                            e.preventDefault();
-                            focusNextField(target);
-                        }
-                        return;
+                        return; // Normal verhalten
                     }
                     
                     // Submit-Button normal funktionieren lassen
@@ -347,66 +509,121 @@
                     if (target.tagName === 'INPUT' || target.tagName === 'SELECT') {
                         e.preventDefault();
                         
-                        // Bei Datum-Feldern: Trigger change event für Day-Generation
+                        // Bei Datum-Feldern: Trigger change event
                         if (target.type === 'date') {
                             target.dispatchEvent(new Event('change', { bubbles: true }));
                         }
                         
-                        focusNextField(target);
+                        focusNextField(target, false);
+                    }
+                }
+
+                // Shift+Enter = Nur Pflichtfelder
+                if (e.key === 'Enter' && e.shiftKey) {
+                    const target = e.target;
+                    if (target.tagName !== 'TEXTAREA') {
+                        e.preventDefault();
+                        focusNextField(target, true);
+                        showKeyboardHint('⚡ Springe zu Pflichtfeldern');
                     }
                 }
             });
 
-            // Keyboard Shortcuts
+            // Global Keyboard Shortcuts
             document.addEventListener('keydown', function(e) {
+                // Wenn in Input, nur Ctrl/Cmd Shortcuts
+                const inInput = ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName);
+                
+                if (inInput && !e.ctrlKey && !e.metaKey) {
+                    return;
+                }
+
                 // Ctrl/Cmd + E = Neuer Einsatz
                 if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
                     e.preventDefault();
                     addEinsatz();
-                    showKeyboardHint('Neuer Einsatz hinzugefügt!');
+                    showKeyboardHint('✅ Neuer Einsatz hinzugefügt!');
                 }
                 
-                // Ctrl/Cmd + Enter = Submit (von überall)
+                // Ctrl/Cmd + S = Submit
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    if (confirm('Stundenrapport jetzt absenden?')) {
+                        form.requestSubmit();
+                        showKeyboardHint('📤 Wird abgesendet...');
+                    }
+                }
+
+                // Ctrl/Cmd + Enter = Submit
                 if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                     e.preventDefault();
-                    form.submit();
+                    if (confirm('Stundenrapport jetzt absenden?')) {
+                        form.requestSubmit();
+                    }
                 }
             });
 
-            // Auto-save Werte bei Input (optional für später)
+            // Focus-Feedback für alle Inputs
             const inputs = form.querySelectorAll('input, select, textarea');
             inputs.forEach(input => {
-                // Besseres Focus-Feedback
                 input.addEventListener('focus', function() {
-                    this.parentElement.style.transform = 'scale(1.01)';
+                    const formGroup = this.closest('.form-group');
+                    if (formGroup) {
+                        formGroup.classList.add('focused');
+                    }
+                    
+                    // Auto-select
+                    if (['text', 'number', 'email', 'tel'].includes(this.type)) {
+                        setTimeout(() => this.select(), 10);
+                    }
                 });
+                
                 input.addEventListener('blur', function() {
-                    this.parentElement.style.transform = 'scale(1)';
+                    const formGroup = this.closest('.form-group');
+                    if (formGroup) {
+                        formGroup.classList.remove('focused');
+                    }
                 });
             });
         }
 
-        function focusNextField(currentField) {
+        function focusNextField(currentField, skipOptional = false) {
             const form = currentField.closest('form');
             const focusableElements = Array.from(form.querySelectorAll(
-                'input:not([type="hidden"]):not([disabled]), select:not([disabled]), textarea:not([disabled]), button[type="submit"]'
+                'input:not([type="hidden"]):not([disabled]):not([type="checkbox"]), select:not([disabled]), textarea:not([disabled]), button[type="submit"]'
             ));
             
-            const currentIndex = focusableElements.indexOf(currentField);
-            const nextField = focusableElements[currentIndex + 1];
+            let currentIndex = focusableElements.indexOf(currentField);
+            let nextField = null;
+            
+            // Finde nächstes Feld
+            for (let i = currentIndex + 1; i < focusableElements.length; i++) {
+                const field = focusableElements[i];
+                
+                // Skip optionale Felder wenn gewünscht
+                if (skipOptional && !field.hasAttribute('required') && field.type !== 'submit') {
+                    continue;
+                }
+                
+                nextField = field;
+                break;
+            }
             
             if (nextField) {
                 nextField.focus();
                 
-                // Bei Select: automatisch öffnen
+                // Bei Select kurz warten, dann öffnen
                 if (nextField.tagName === 'SELECT') {
-                    nextField.click();
+                    setTimeout(() => nextField.click(), 100);
                 }
                 
-                // Bei Number: Selektieren für schnelles Überschreiben
-                if (nextField.type === 'number' || nextField.type === 'text' || nextField.type === 'email') {
-                    nextField.select();
+                // Auto-select
+                if (['number', 'text', 'email', 'tel'].includes(nextField.type)) {
+                    setTimeout(() => nextField.select(), 10);
                 }
+
+                // Smooth scroll
+                nextField.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }
 
@@ -421,7 +638,7 @@
             hint.classList.add('show');
             setTimeout(() => {
                 hint.classList.remove('show');
-            }, 2000);
+            }, 3000);
         }
 
         function formatDate(date) {
@@ -435,8 +652,8 @@
         }
 
         function generateDayInputs(einsatzId) {
-            const vonInput = document.querySelector(`input[name="Einsatz_${einsatzId}_Datum_von"]`);
-            const bisInput = document.querySelector(`input[name="Einsatz_${einsatzId}_Datum_bis"]`);
+            const vonInput = document.querySelector(`input[name*="Einsatz_${einsatzId}__Datum_von"]`);
+            const bisInput = document.querySelector(`input[name*="Einsatz_${einsatzId}__Datum_bis"]`);
             const container = document.getElementById(`days-container-${einsatzId}`);
             
             if (!vonInput.value || !bisInput.value) {
@@ -458,11 +675,10 @@
             html += '<div style="overflow-x: auto;">';
             html += '<table style="width: 100%; border-collapse: separate; border-spacing: 0; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden;">';
             
-            // Table Header
             html += '<thead>';
             html += '<tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">';
             html += '<th style="padding: 15px; text-align: left; color: white; font-weight: 600; border-bottom: 2px solid #5568d3;">Datum / Date</th>';
-            html += '<th style="padding: 15px; text-align: center; color: white; font-weight: 600; border-bottom: 2px solid #5568d3; min-width: 150px;">Stunden / Hours</th>';
+            html += '<th style="padding: 15px; text-align: center; color: white; font-weight: 600; border-bottom: 2px solid #5568d3; min-width: 200px;">Stunden / Hours</th>';
             html += '</tr>';
             html += '</thead>';
             
@@ -470,20 +686,28 @@
             
             const currentDate = new Date(startDate);
             let rowIndex = 0;
+            let firstInputId = null;
             
             while (currentDate <= endDate) {
                 rowIndex++;
                 const dateStr = currentDate.toISOString().split('T')[0];
                 const displayDate = formatDate(currentDate);
                 const bgColor = rowIndex % 2 === 0 ? '#f8f9fa' : 'white';
+                const inputId = `input-${einsatzId}-${dateStr}`;
+                
+                if (!firstInputId) firstInputId = inputId;
                 
                 html += `<tr style="background: ${bgColor}; transition: background 0.2s ease;" onmouseover="this.style.background='#e8eaf6'" onmouseout="this.style.background='${bgColor}'">`;
                 html += `<td style="padding: 15px; border-bottom: 1px solid #e0e0e0; font-weight: 500; color: #555;">📅 ${displayDate}</td>`;
-                html += `<td style="padding: 15px; border-bottom: 1px solid #e0e0e0; text-align: center;">`;
+                html += `<td style="padding: 12px 15px; border-bottom: 1px solid #e0e0e0;">`;
+                
+                // Input Container
+                html += `<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">`;
                 html += `<div style="display: inline-flex; align-items: center; gap: 8px; background: white; padding: 8px 15px; border-radius: 6px; border: 2px solid #e0e0e0;">`;
                 html += `<input 
                     type="number" 
-                    name="Einsatz_${einsatzId}_Tag_${dateStr}" 
+                    id="${inputId}"
+                    name="Einsatz_${einsatzId}__Tag_${dateStr} / Day_${dateStr}" 
                     min="0" 
                     max="24" 
                     step="0.25" 
@@ -492,10 +716,19 @@
                     onchange="calculateTotal(${einsatzId})"
                     onfocus="this.select(); this.parentElement.style.borderColor='#667eea'; this.parentElement.style.boxShadow='0 0 0 3px rgba(102, 126, 234, 0.1)'"
                     onblur="this.parentElement.style.borderColor='#e0e0e0'; this.parentElement.style.boxShadow='none'"
-                    onkeydown="if(event.key==='Enter'){event.preventDefault(); var next=this.closest('tr').nextElementSibling; if(next){next.querySelector('input').focus()}else{document.querySelector('[name=\\'Einsatz_${einsatzId}_Familie_Kundenname\\']').focus()}}"
+                    onkeydown="handleHoursInputKeydown(event, ${einsatzId}, '${dateStr}')"
                 >`;
                 html += `<span style="color: #667eea; font-weight: 600; font-size: 15px;">h</span>`;
                 html += `</div>`;
+                
+                // Schnellwahl-Buttons
+                html += `<div class="quick-hours">`;
+                [1, 2, 3, 4, 5, 8].forEach(hour => {
+                    html += `<button type="button" class="quick-hour-btn" onclick="setHours(${einsatzId}, '${dateStr}', ${hour})" title="Setze ${hour} Stunden">${hour}h</button>`;
+                });
+                html += `</div>`;
+                html += `</div>`;
+                
                 html += `</td>`;
                 html += `</tr>`;
                 
@@ -504,7 +737,6 @@
             
             html += '</tbody>';
             
-            // Table Footer mit Total
             html += '<tfoot>';
             html += '<tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">';
             html += '<td style="padding: 18px; color: white; font-weight: 700; font-size: 16px; border-top: 3px solid #5568d3;">💼 Gesamtstunden / Total Hours</td>';
@@ -520,6 +752,67 @@
             
             container.innerHTML = html;
             calculateTotal(einsatzId);
+            
+            // Focus auf erstes Stunden-Feld setzen
+            if (firstInputId) {
+                setTimeout(() => {
+                    const firstInput = document.getElementById(firstInputId);
+                    if (firstInput) {
+                        firstInput.focus();
+                        firstInput.select();
+                        showKeyboardHint('⏰ Tipp: Enter = Nächster Tag, Zahlen 1-8 = Schnelleingabe');
+                    }
+                }, 100);
+            }
+        }
+
+        function handleHoursInputKeydown(event, einsatzId, currentDateStr) {
+            const input = event.target;
+            
+            // Enter = Nächster Tag
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const currentRow = input.closest('tr');
+                const nextRow = currentRow.nextElementSibling;
+                
+                if (nextRow) {
+                    const nextInput = nextRow.querySelector('input[type="number"]');
+                    if (nextInput) {
+                        nextInput.focus();
+                        nextInput.select();
+                    }
+                } else {
+                    // Letzter Tag - springe zum nächsten Feld im Formular
+                    const familieInput = document.querySelector(`[name*="Einsatz_${einsatzId}__Familie_Kundenname"]`);
+                    if (familieInput) {
+                        familieInput.focus();
+                        familieInput.select();
+                    }
+                }
+                return;
+            }
+            
+            // Schnelleingabe: Zahlen 1-8
+            if (!event.ctrlKey && !event.metaKey && !event.altKey && !event.shiftKey) {
+                if (['1', '2', '3', '4', '5', '6', '7', '8'].includes(event.key)) {
+                    const currentValue = input.value;
+                    // Nur wenn Feld leer oder ausgewählt
+                    if (!currentValue || input.selectionStart === 0 && input.selectionEnd === input.value.length) {
+                        event.preventDefault();
+                        setHours(einsatzId, currentDateStr, parseInt(event.key));
+                        showKeyboardHint(`⚡ ${event.key} Stunden eingetragen`);
+                    }
+                }
+            }
+        }
+
+        function setHours(einsatzId, dateStr, hours) {
+            const input = document.querySelector(`input[name*="Einsatz_${einsatzId}__Tag_${dateStr}"]`);
+            if (input) {
+                input.value = hours;
+                calculateTotal(einsatzId);
+                input.dispatchEvent(new Event('change'));
+            }
         }
 
         function calculateTotal(einsatzId) {
@@ -537,8 +830,7 @@
                 totalElement.textContent = total.toFixed(2) + ' h';
             }
             
-            // Update hidden field for total hours
-            const hiddenTotal = document.querySelector(`input[name="Einsatz_${einsatzId}_Gesamtstunden"]`);
+            const hiddenTotal = document.querySelector(`input[name*="Einsatz_${einsatzId}__Gesamtstunden"]`);
             if (hiddenTotal) {
                 hiddenTotal.value = total.toFixed(2);
             }
@@ -550,79 +842,90 @@
             const newBlock = document.createElement('div');
             newBlock.className = 'einsatz-block';
             
-            // Check if copy-to-all is enabled
             const copyToAll = document.getElementById('copy-to-all').checked;
             const masterFamilie = copyToAll ? document.getElementById('master-familie').value : '';
             const masterOrt = copyToAll ? document.getElementById('master-ort').value : '';
             const masterStundenansatz = copyToAll ? document.getElementById('master-stundenansatz').value : '';
             
             newBlock.innerHTML = `
-                <button type="button" class="remove-einsatz" onclick="removeEinsatz(this)" title="Einsatz entfernen / Remove entry">×</button>
+                <button type="button" class="remove-einsatz" onclick="removeEinsatz(this)" title="Einsatz entfernen">×</button>
                 <h3>📅 Einsatz ${einsatzCounter} / Entry ${einsatzCounter}</h3>
                 
                 <div class="row">
                     <div class="form-group">
                         <label>Datum von / Date from <span class="required">*</span></label>
-                        <input type="date" name="Einsatz_${einsatzCounter}_Datum_von" required onchange="generateDayInputs(${einsatzCounter})">
+                        <input type="date" name="Einsatz_${einsatzCounter}__Datum_von / Date_from" id="new-einsatz-datum-von-${einsatzCounter}" required onchange="generateDayInputs(${einsatzCounter})">
                     </div>
 
                     <div class="form-group">
                         <label>Datum bis / Date to <span class="required">*</span></label>
-                        <input type="date" name="Einsatz_${einsatzCounter}_Datum_bis" required onchange="generateDayInputs(${einsatzCounter})">
+                        <input type="date" name="Einsatz_${einsatzCounter}__Datum_bis / Date_to" required onchange="generateDayInputs(${einsatzCounter})">
                     </div>
                 </div>
 
                 <div id="days-container-${einsatzCounter}"></div>
 
-                <input type="hidden" name="Einsatz_${einsatzCounter}_Gesamtstunden" value="0">
+                <input type="hidden" name="Einsatz_${einsatzCounter}__Gesamtstunden / Total_Hours" value="0">
 
                 <div class="row" style="margin-top: 20px;">
                     <div class="form-group">
                         <label>Stundenansatz / Hourly Rate</label>
                         <div style="position: relative;">
-                            <input type="number" name="Einsatz_${einsatzCounter}_Stundenansatz_CHF" value="${masterStundenansatz}" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px; ${copyToAll && masterStundenansatz ? 'background: #e8f5e9; border-color: #4caf50;' : ''}">
+                            <input type="number" name="Einsatz_${einsatzCounter}__Stundenansatz_CHF / Hourly_Rate_CHF" value="${masterStundenansatz}" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px; ${copyToAll && masterStundenansatz ? 'background: #e8f5e9; border-color: #4caf50;' : ''}">
                             <span style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #667eea; font-weight: 600; font-size: 14px; pointer-events: none;">CHF</span>
                         </div>
-                        ${copyToAll && masterStundenansatz ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen / Automatically copied</small>' : ''}
+                        ${copyToAll && masterStundenansatz ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen</small>' : ''}
                     </div>
                     <div></div>
                 </div>
 
                 <div class="form-group">
                     <label>Familie / Kundenname / Family / Client Name <span class="required">*</span></label>
-                    <input type="text" name="Einsatz_${einsatzCounter}_Familie_Kundenname" value="${masterFamilie}" required ${copyToAll ? 'style="background: #e8f5e9; border-color: #4caf50;"' : ''}>
-                    ${copyToAll ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen / Automatically copied</small>' : ''}
+                    <input type="text" name="Einsatz_${einsatzCounter}__Familie_Kundenname / Family_Client_Name" value="${masterFamilie}" required ${copyToAll ? 'style="background: #e8f5e9; border-color: #4caf50;"' : ''}>
+                    ${copyToAll ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen</small>' : ''}
                 </div>
 
                 <div class="form-group">
                     <label>Ort des Einsatzes / Location <span class="required">*</span></label>
-                    <input type="text" name="Einsatz_${einsatzCounter}_Ort_Einsatz" value="${masterOrt}" required ${copyToAll ? 'style="background: #e8f5e9; border-color: #4caf50;"' : ''}>
-                    ${copyToAll ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen / Automatically copied</small>' : ''}
+                    <input type="text" name="Einsatz_${einsatzCounter}__Ort_Einsatz / Location" value="${masterOrt}" required ${copyToAll ? 'style="background: #e8f5e9; border-color: #4caf50;"' : ''}>
+                    ${copyToAll ? '<small style="color: #4caf50; font-size: 12px;">✓ Automatisch übernommen</small>' : ''}
                 </div>
 
                 <div class="form-group">
                     <label>Tätigkeit / Activity</label>
-                    <select name="Einsatz_${einsatzCounter}_Taetigkeit">
+                    <select name="Einsatz_${einsatzCounter}__Taetigkeit / Activity">
                         <option value="">Bitte wählen / Please select</option>
                         <option value="Babysitting">Babysitting</option>
-                        <option value="Kinderbetreuung">Kinderbetreuung / Childcare</option>
-                        <option value="Hausaufgabenhilfe">Hausaufgabenhilfe / Homework help</option>
-                        <option value="Ferienbetreuung">Ferienbetreuung / Holiday care</option>
-                        <option value="Sonstiges">Sonstiges / Other</option>
+                        <option value="Kinderbetreuung / Childcare">Kinderbetreuung / Childcare</option>
+                        <option value="Hausaufgabenhilfe / Homework help">Hausaufgabenhilfe / Homework help</option>
+                        <option value="Ferienbetreuung / Holiday care">Ferienbetreuung / Holiday care</option>
+                        <option value="Sonstiges / Other">Sonstiges / Other</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>Bemerkungen / Notes</label>
-                    <textarea name="Einsatz_${einsatzCounter}_Bemerkungen" placeholder="Zusätzliche Informationen / Additional information..."></textarea>
+                    <textarea name="Einsatz_${einsatzCounter}__Bemerkungen / Notes" placeholder="Zusätzliche Informationen..."></textarea>
                 </div>
             `;
             container.appendChild(newBlock);
+            
+            // Fokus auf erstes Datum-Feld des neuen Einsatzes
+            setTimeout(() => {
+                const newDateInput = document.getElementById(`new-einsatz-datum-von-${einsatzCounter}`);
+                if (newDateInput) {
+                    newDateInput.focus();
+                    newDateInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 100);
         }
 
         function removeEinsatz(button) {
-            const block = button.closest('.einsatz-block');
-            block.remove();
+            if (confirm('Diesen Einsatz wirklich entfernen?')) {
+                const block = button.closest('.einsatz-block');
+                block.remove();
+                showKeyboardHint('🗑️ Einsatz entfernt');
+            }
         }
     </script>
 </head>
@@ -644,21 +947,15 @@
         </div>
 
         <form action="https://api.web3forms.com/submit" method="POST" class="form-section">
-            <!-- Web3Forms Configuration -->
             <input type="hidden" name="access_key" value="DEIN-WEB3FORMS-ACCESS-KEY">
             <input type="hidden" name="email" value="company@babsy.ch">
             <input type="hidden" name="subject" value="" id="dynamic-subject">
             <input type="hidden" name="from_name" value="Babsy Stundenrapport System">
             <input type="hidden" name="redirect" value="https://babsyit.github.io/hoursreport/danke">
-            
-            <!-- Optional: Spam-Schutz -->
             <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
-            
-            <!-- Optional: CC an Absender -->
             <input type="hidden" name="replyto" value="">
             
             <script>
-                // Automatisch replyto auf die eingegebene Email setzen
                 document.addEventListener('DOMContentLoaded', function() {
                     const emailInput = document.getElementById('sitter-email');
                     const replytoInput = document.querySelector('input[name="replyto"]');
@@ -668,7 +965,6 @@
                         });
                     }
                     
-                    // Dynamischen Betreff beim Submit erstellen
                     const form = document.querySelector('form');
                     form.addEventListener('submit', function(e) {
                         const vorname = document.getElementById('vorname').value;
@@ -676,8 +972,6 @@
                         const monat = document.getElementById('monat').value;
                         const jahr = document.getElementById('jahr').value;
                         const subjectField = document.getElementById('dynamic-subject');
-                        
-                        // Betreff zusammensetzen: "Vorname Nachname Monat Jahr"
                         subjectField.value = `${vorname} ${nachname} ${monat} ${jahr}`;
                     });
                 });
@@ -690,23 +984,23 @@
             <div class="row">
                 <div class="form-group">
                     <label for="vorname">Vorname / First Name <span class="required">*</span></label>
-                    <input type="text" id="vorname" name="Vorname" required>
+                    <input type="text" id="vorname" name="Vorname / First Name" required>
                 </div>
 
                 <div class="form-group">
                     <label for="nachname">Nachname / Last Name <span class="required">*</span></label>
-                    <input type="text" id="nachname" name="Nachname" required>
+                    <input type="text" id="nachname" name="Nachname / Last Name" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="sitter-email">E-Mail-Adresse / Email Address <span class="required">*</span></label>
-                <input type="email" id="sitter-email" name="Sitter_Email" required>
+                <input type="email" id="sitter-email" name="E-Mail-Adresse / Email Address" required>
             </div>
 
             <div class="form-group">
                 <label for="telefon">Telefon / Phone</label>
-                <input type="tel" id="telefon" name="Telefon" placeholder="+41 ...">
+                <input type="tel" id="telefon" name="Telefon / Phone" placeholder="+41 ...">
             </div>
 
             <h2 style="margin: 40px 0 25px; color: #667eea; display: flex; align-items: center; gap: 10px;">
@@ -716,7 +1010,7 @@
             <div class="row">
                 <div class="form-group">
                     <label for="monat">Monat / Month <span class="required">*</span></label>
-                    <select id="monat" name="Monat" required>
+                    <select id="monat" name="Monat / Month" required>
                         <option value="">Bitte wählen / Please select</option>
                         <option value="Januar/January">Januar / January</option>
                         <option value="Februar/February">Februar / February</option>
@@ -735,7 +1029,7 @@
 
                 <div class="form-group">
                     <label for="jahr">Jahr / Year <span class="required">*</span></label>
-                    <input type="number" id="jahr" name="Jahr" min="2020" max="2030" value="2025" required>
+                    <input type="number" id="jahr" name="Jahr / Year" min="2020" max="2030" value="2025" required>
                 </div>
             </div>
 
@@ -744,31 +1038,30 @@
             </h2>
 
             <div id="einsaetze-container">
-                <!-- Erster Einsatz Block -->
                 <div class="einsatz-block">
                     <h3>📅 Einsatz 1 / Entry 1</h3>
                     
                     <div class="row">
                         <div class="form-group">
                             <label>Datum von / Date from <span class="required">*</span></label>
-                            <input type="date" name="Einsatz_1_Datum_von" required onchange="generateDayInputs(1)">
+                            <input type="date" name="Einsatz_1__Datum_von / Date_from" required onchange="generateDayInputs(1)">
                         </div>
 
                         <div class="form-group">
                             <label>Datum bis / Date to <span class="required">*</span></label>
-                            <input type="date" name="Einsatz_1_Datum_bis" required onchange="generateDayInputs(1)">
+                            <input type="date" name="Einsatz_1__Datum_bis / Date_to" required onchange="generateDayInputs(1)">
                         </div>
                     </div>
 
                     <div id="days-container-1"></div>
 
-                    <input type="hidden" name="Einsatz_1_Gesamtstunden" value="0">
+                    <input type="hidden" name="Einsatz_1__Gesamtstunden / Total_Hours" value="0">
 
                     <div class="row" style="margin-top: 20px;">
                         <div class="form-group">
                             <label>Stundenansatz / Hourly Rate</label>
                             <div style="position: relative;">
-                                <input type="number" name="Einsatz_1_Stundenansatz_CHF" id="master-stundenansatz" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px;">
+                                <input type="number" name="Einsatz_1__Stundenansatz_CHF / Hourly_Rate_CHF" id="master-stundenansatz" min="0" step="0.5" placeholder="25.00" style="padding-right: 60px;">
                                 <span style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #667eea; font-weight: 600; font-size: 14px; pointer-events: none;">CHF</span>
                             </div>
                         </div>
@@ -777,39 +1070,38 @@
 
                     <div class="form-group">
                         <label>Familie / Kundenname / Family / Client Name <span class="required">*</span></label>
-                        <input type="text" name="Einsatz_1_Familie_Kundenname" id="master-familie" required>
+                        <input type="text" name="Einsatz_1__Familie_Kundenname / Family_Client_Name" id="master-familie" required>
                     </div>
 
                     <div class="form-group">
                         <label>Ort des Einsatzes / Location <span class="required">*</span></label>
-                        <input type="text" name="Einsatz_1_Ort_Einsatz" id="master-ort" required>
+                        <input type="text" name="Einsatz_1__Ort_Einsatz / Location" id="master-ort" required>
                     </div>
 
                     <div class="form-group" style="background: #e8eaf6; padding: 15px; border-radius: 8px; border: 2px dashed #667eea;">
                         <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 0;">
                             <input type="checkbox" id="copy-to-all" style="width: 20px; height: 20px; cursor: pointer;">
                             <span style="font-weight: 600; color: #667eea;">
-                                🔄 Familie, Ort und Stundenansatz für alle weiteren Einsätze verwenden / 
-                                Use family, location and hourly rate for all other entries
+                                🔄 Familie, Ort und Stundenansatz für alle weiteren Einsätze verwenden
                             </span>
                         </label>
                     </div>
 
                     <div class="form-group">
                         <label>Tätigkeit / Activity</label>
-                        <select name="Einsatz_1_Taetigkeit">
+                        <select name="Einsatz_1__Taetigkeit / Activity">
                             <option value="">Bitte wählen / Please select</option>
                             <option value="Babysitting">Babysitting</option>
-                            <option value="Kinderbetreuung">Kinderbetreuung / Childcare</option>
-                            <option value="Hausaufgabenhilfe">Hausaufgabenhilfe / Homework help</option>
-                            <option value="Ferienbetreuung">Ferienbetreuung / Holiday care</option>
-                            <option value="Sonstiges">Sonstiges / Other</option>
+                            <option value="Kinderbetreuung / Childcare">Kinderbetreuung / Childcare</option>
+                            <option value="Hausaufgabenhilfe / Homework help">Hausaufgabenhilfe / Homework help</option>
+                            <option value="Ferienbetreuung / Holiday care">Ferienbetreuung / Holiday care</option>
+                            <option value="Sonstiges / Other">Sonstiges / Other</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label>Bemerkungen / Notes</label>
-                        <textarea name="Einsatz_1_Bemerkungen" placeholder="Zusätzliche Informationen / Additional information..."></textarea>
+                        <textarea name="Einsatz_1__Bemerkungen / Notes" placeholder="Zusätzliche Informationen..."></textarea>
                     </div>
                 </div>
             </div>
@@ -825,29 +1117,14 @@
 
             <div class="form-group">
                 <label for="allgemeine-bemerkungen">Zusätzliche Anmerkungen / Additional Comments</label>
-                <textarea id="allgemeine-bemerkungen" name="Allgemeine_Bemerkungen" placeholder="Weitere Informationen zum gesamten Report / Additional information for the entire report..."></textarea>
+                <textarea id="allgemeine-bemerkungen" name="Allgemeine_Bemerkungen / General_Notes" placeholder="Weitere Informationen..."></textarea>
             </div>
 
             <button type="submit" class="submit-btn">✉️ Stundenrapport absenden / Submit Hours Report</button>
-
-            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
-                <p style="font-size: 13px; color: #555; margin-bottom: 8px;"><strong>⌨️ Keyboard-Shortcuts:</strong></p>
-                <p style="font-size: 12px; color: #666; margin: 4px 0;">
-                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">Enter</kbd> = Nächstes Feld
-                </p>
-                <p style="font-size: 12px; color: #666; margin: 4px 0;">
-                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">Ctrl</kbd> + 
-                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">E</kbd> = Neuer Einsatz hinzufügen
-                </p>
-                <p style="font-size: 12px; color: #666; margin: 4px 0;">
-                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">Ctrl</kbd> + 
-                    <kbd style="background: white; padding: 2px 6px; border: 1px solid #ddd; border-radius: 3px; font-family: monospace;">Enter</kbd> = Formular absenden
-                </p>
-            </div>
         </form>
 
         <div class="contact-info">
-            <p><strong>📞 Bei Fragen kontaktieren Sie uns / For questions contact us:</strong></p>
+            <p><strong>📞 Bei Fragen kontaktieren Sie uns:</strong></p>
             <p style="margin-top: 10px;">
             📧 <a href="mailto:sitter@babsy.ch">sitter@babsy.ch</a><br>
             📱 WhatsApp: <a href="https://wa.me/41788616025">+41 78 861 60 25</a></p>
